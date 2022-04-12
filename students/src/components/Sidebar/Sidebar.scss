@@ -1,0 +1,48 @@
+
+.app__sidebar {
+    flex: 1;
+    padding: 2rem;
+    border-right: 1px solid black;
+    // display: flex;
+    // flex-direction: column;
+
+    .app__sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            font-family: Roboto, sans-serif;
+            font-weight: 400;
+            font-size: 1.2em;
+
+        }
+    
+        select {
+            border-style: none;
+    
+            &:focus {
+                outline: none;
+            }
+    
+            &:active {
+                border-style: none;
+            }
+        }
+    }
+    .app__sidebar-links {
+        border-bottom: 1px solid rgb(190, 190, 190);
+        padding-bottom: 1rem;
+        .app__sidebar-link {
+            text-decoration: none;
+            font-family: Roboto, sans-serif;
+            font-weight: 400;
+            font-size: 1em;
+            color: var(--text-color);
+    
+            &:hover {
+                color: red;
+            }
+        }
+    }
+}
