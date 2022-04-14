@@ -25,10 +25,11 @@ const AddStudent = () => {
 
     const { fullName, dob, school, classname, division, status } = user;
 
-    const res = await fetch("http://localhost:3001/insert", {
+    const res = await fetch('http://localhost:3001/insert', {
       method: "POST",
       headers: {
-        "Content-Type" : "application/json"
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         fullName,
@@ -42,8 +43,10 @@ const AddStudent = () => {
     const data = await res.json();
     if (data.status === 422 || !data) {
       window.alert("Failed");
+      console.log("failed")
     } else {
-      window.alert("Inserted");
+      window.alert(data.status);
+      console.log(data)
     }
   }
 
@@ -56,21 +59,22 @@ const AddStudent = () => {
       <label htmlFor="fullName">Name</label>
       <input type="text" name='fullName' placeholder='Name' id='fullName' autoComplete='off'
       value={user.fullName}
-      onChange={handleInputs}/>
+      onChange={handleInputs} data-toggle="tooltip" data-html="true" required/>
       </div>
 
       <div className='app__addstudent-form'>
       <label htmlFor="dob">Date Of Birth</label>
       <input type="date" name='dob' id='dob'
       value={user.dob}
-      onChange={handleInputs}/>
+      onChange={handleInputs} required/>
       </div>
 
       <div className='app__addstudent-form'>
       <label htmlFor="school">School</label>
       <select id='school' name='school'
       value={user.school}
-      onChange={handleInputs}>
+      onChange={handleInputs} required>
+      <option value=''>School</option>
       <option value="Model School">Model School</option>
       <option value="Public School">Public School</option>
       </select>
@@ -81,8 +85,8 @@ const AddStudent = () => {
       <select id='class' name='classname'
       value={user.classname}
       onChange={handleInputs}
-      >
-      <option>Class</option>
+      required>
+      <option value=''>Class</option>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -97,8 +101,8 @@ const AddStudent = () => {
       <select id='division' name='division'
       value={user.division}
       onChange={handleInputs}
-      >
-      <option>Division</option>
+      required>
+      <option value=''>Division</option>
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -114,13 +118,13 @@ const AddStudent = () => {
         <input type="radio" id="active" name="status"
       value="Active"
       onChange={handleInputs}
-      />
+      required/>
         <label htmlFor="active">Active</label>
 
         <input type="radio" id="invoice" name="status"
       value="Invoice"
       onChange={handleInputs}
-      />
+      required/>
         <label htmlFor="invoice">Invoice</label>
       </div>
       </div>

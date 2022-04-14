@@ -2,15 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const cors=require("cors");
-const corsOptions ={
-   origin:'*', 
-   credentials:true,            //access-control-allow-credentials:true
-   optionSuccessStatus:200,
-}
+const StudentModel = require('./models/Student');
 
-app.use(cors(corsOptions))
-
-const StudentModel = require("./models/Student");
+app.use(cors())
 
 app.use(express.json())
 
@@ -21,15 +15,17 @@ mongoose.connect('mongodb+srv://student:Sukh11707506@cluster0.xswcf.mongodb.net/
 
 app.post('/insert', async (req, res) => {
     const { fullName, dob, school, classname, division, status } = req.body;
+    console.log(fullName, dob, school, classname, division, status)
 
     if (!fullName || !dob || !school || !classname || !division || !status ) {
-        return res.status(422).json({error: "Data invalid"});
+        return res.status(422).json({status: "Please fill all the fields"});
     }
-    // const student =  new StudentModel({ fullName: "Sukhvant Singh", age: 21, school: "LPU", class: "BTech", division: "A", status: "Active"});
+    
+    const student =  new StudentModel({ fullName: fullName, age: dob, school: school, classname: classname, division: division, status: status });
 
     try {
-     await user.save();
-     res.send("inserted");
+     await student.save();
+     res.json({status: "Data inserted"});
     } catch(err) {
         console.log(err)
     }
