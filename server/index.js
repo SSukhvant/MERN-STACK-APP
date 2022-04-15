@@ -29,7 +29,16 @@ app.post('/insert', async (req, res) => {
     } catch(err) {
         console.log(err)
     }
-})
+});
+
+app.get('/read', async (req, res) => {
+  StudentModel.find({}, (err, result ) => {
+      if(err) {
+          res.json({err: "Failed"});
+      }
+      res.json(result);
+  });
+});
 
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
