@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './AddStudent.scss';
 
-const AddStudent = () => {
 
+const AddStudent = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
      fullName: "", dob: "", school: "", classname: "", division: "", status: ""
   });
@@ -19,6 +22,7 @@ const AddStudent = () => {
 
     console.log(user);
   }
+
 
   const PostData = async (event) => {
     event.preventDefault();
@@ -42,11 +46,12 @@ const AddStudent = () => {
     });
     const data = await res.json();
     if (data.status === 422 || !data) {
-      window.alert("Failed");
+      toast.error("Failed");
       console.log("failed")
     } else {
-      window.alert(data.status);
-      console.log(data)
+      toast.info(data.status);
+      console.log(data);
+      navigate("/");
     }
   }
 
@@ -59,7 +64,7 @@ const AddStudent = () => {
       <label htmlFor="fullName">Name</label>
       <input type="text" name='fullName' placeholder='Name' id='fullName' autoComplete='off'
       value={user.fullName}
-      onChange={handleInputs} data-toggle="tooltip" data-html="true" required/>
+      onChange={handleInputs} required/>
       </div>
 
       <div className='app__addstudent-form'>

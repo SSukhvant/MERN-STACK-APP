@@ -40,6 +40,21 @@ app.get('/read', async (req, res) => {
   });
 });
 
+app.get('/update/:id', async (req, res) => {
+    console.log(req.params.id);
+    
+    // const singleStudent =  new StudentModel({ fullName: fullName, age: dob, school: school, classname: classname, division: division, status: status });
+
+    // try {
+    //  await student.save();
+    //  res.json({status: "Data inserted"});
+    // } catch(err) {
+    //     console.log(err)
+    // }
+});
+
+
+
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
 });
