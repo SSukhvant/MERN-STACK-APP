@@ -42,15 +42,16 @@ app.get('/read', async (req, res) => {
 
 app.get('/update/:id', async (req, res) => {
     console.log(req.params.id);
-    
-    // const singleStudent =  new StudentModel({ fullName: fullName, age: dob, school: school, classname: classname, division: division, status: status });
-
-    // try {
-    //  await student.save();
-    //  res.json({status: "Data inserted"});
-    // } catch(err) {
-    //     console.log(err)
-    // }
+    StudentModel.findById({_id:req.params.id}, function (err, result) {
+        if (err){
+            console.log(err);
+            res.json({err: "Failed"});
+        }
+        else{
+            console.log("Result : ", result);
+            res.json(result)
+        }
+    })
 });
 
 

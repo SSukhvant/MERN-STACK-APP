@@ -1,4 +1,4 @@
-import axios from "axios";
+import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,25 +17,47 @@ const Update = (props) => {
 
   const { fullName, dob, school, classname, division, status } = initialState;
 
-  const {id} = useParams(props.uid);
-  useEffect(() => {
-      if(id) {
-          getStudent(id);
-      }
-  }, [id])
 
-  const getStudent = async (id) => {
-    const response = await axios.get(`http://localhost:3001/update/${id}`);
-    setNewData({...response.data[0]});
-    toast.success(data[0]);
-   }
+  const sid = props.uid;
+  let { id } = useParams();
+  // const id = useParams(props.uid);
+  // console.log(id)
+  // useEffect(() => {
+  //     if(id) {
+  //         getStudent(id);
+  //     }
+  // }, [id])
+
+
+
+  // const getStudent = async (id) => {
+  //   const response = await axios.get(`http://localhost:3001/update/${id}`);
+  //   setNewData(response.data[0]);
+
+  //   const data1 = await response.json();
+  //   if (data1.status || !data1) {
+  //     toast.error("Failed");
+  //     console.log("failed")
+  //   } else {
+  //     toast.info(data1.Result);
+  //     console.log(data1);
+  
+  //   }
+  //  }
+
+   useEffect((id) => {
+    Axios.get(`http://localhost:3001/update/${id}`).then((response) => {
+      setNewData(response.data);
+      console.log(response.data)
+    })
+  },[id]);
 
   const handleUpdate = (event) => {
     const {name, value} = event.target;
 
     setNewData({ ...newData, [name]: value });
 
-    console.log(newData);
+    // console.log(newData);
   };
 
 
