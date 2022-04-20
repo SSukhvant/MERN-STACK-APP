@@ -40,7 +40,7 @@ app.get('/read', async (req, res) => {
   });
 });
 
-app.get('/update/:id', async (req, res) => {
+app.get('/read/:id', async (req, res) => {
     console.log(req.params.id);
     StudentModel.findById({_id:req.params.id}, function (err, result) {
         if (err){
@@ -51,6 +51,31 @@ app.get('/update/:id', async (req, res) => {
             console.log("Result : ", result);
             res.json(result)
         }
+    })
+});
+
+app.put('/update/:id', async (req, res) => {
+    console.log(req.params.id);
+    StudentModel.findOneAndUpdate({_id:req.params.id}, {
+    $set: {
+        fullName: req.body.fullName, 
+        age: req.body.dob, 
+        school: req.body.school, 
+        classname: req.body.classname, 
+        division: req.body.division, 
+        status: req.body.status
+    }
+})
+    .then(result=> {
+        res.status(200).json({
+            updated_product:result
+        })
+    })
+    .catch(err=>{
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
     })
 });
 

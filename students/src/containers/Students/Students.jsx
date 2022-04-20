@@ -3,8 +3,7 @@ import Axios from 'axios';
 import "./Students.scss";
 import { HiDownload } from 'react-icons/hi';
 import { ImCross } from 'react-icons/im';
-import Update from "../Update/Update";
-import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const initialState = {
   fullName: "",
@@ -16,35 +15,40 @@ const initialState = {
 };
 
 const Students = () => {
+  const [oneData, setOneData] = useState(initialState);
   const [newData, setNewData] = useState(initialState);
-
-  const { fullName, dob, school, classname, division, status } = initialState;
-   
-   const [student, setStudent] = useState([]);
-   const [modal, setModal] = useState(false);
-   const [uid, setUid] =useState([]);
+  const [student, setStudent] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [uid, setUid] = useState('');
 
    const handleUpdate = (event) => {
     const {name, value} = event.target;
-
-    setNewData({ ...newData, [name]: value });
-
-    // console.log(newData);
+    setOneData({ ...oneData, [name]: value });
+    console.log(oneData);
   };
 
+  const handleSubmit = (id) => {
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+    Axios.put(`http://localhost:3001/update/${id}`, oneData)
+    .then((response) => {
+      console.log(response);
+      window.alert("Success")
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   };
-  //  const {id} = useParams();
- 
-   const toggleModal = (id) => {
-    Axios.get(`http://localhost:3001/update/${id}`).then((response) => {
-      setNewData(response.data);
+
+  const GetStudent = (id) => {
+    Axios.get(`http://localhost:3001/read/${id}`).then((response) => {
+      setOneData(response.data);
+      setUid(id);
       console.log(response.data);
     })
+  }
+ 
+   const toggleModal = () => {
     setModal(!modal);
-     setUid(id);
      if(modal) {
       document.body.classList.add('active-modal')
     } else {
@@ -53,14 +57,11 @@ const Students = () => {
 
    };
  
-
-
    useEffect(() => {
      Axios.get("http://localhost:3001/read").then((response) => {
        setStudent(response.data);
      })
    },[]);
-
 
   return (
     <div className="app__students">
@@ -126,7 +127,7 @@ const Students = () => {
           <td>{index.status}</td>
           <td>
               
-          <button type="submit" onClick={() =>toggleModal(index._id)} className="app__edit-delete-btn">Edit</button>
+          <button type="submit" onClick={() => {toggleModal(); GetStudent(index._id)}} className="app__edit-delete-btn">Edit</button>
           <button type="submit" className="app__edit-delete-btn">Delete</button>
           </td>
         </tr>
@@ -139,25 +140,25 @@ const Students = () => {
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-          <form className="app__update-form" onSubmit={handleSubmit}>
+          <form className="app__update-form" onSubmit={() => handleSubmit(uid)}>
           <input
             type="text"
             placeholder="Name"
             id="name"
             name="fullName"
-            value={newData.fullName}
+            value={oneData.fullName}
             onChange={handleUpdate}
           />
           <input
-            type="text"
-            id="age"
+            type="date"
+            id="dob"
             placeholder="Age"
             name="dob"
-            value={newData.age}
+            value={oneData.age}
             onChange={handleUpdate}
           />
     
-          <select id="school" name="school" value={newData.school} onChange={handleUpdate}>
+          <select id="school" name="school" value={oneData.school} onChange={handleUpdate}>
             <option>Scool</option>
             <option value="Model School">Model School</option>
             <option value="Public School">Public School</option>
@@ -166,7 +167,7 @@ const Students = () => {
           <select
             id="class"
             name="classname"
-            value={newData.classname}
+            value={oneData.classname}
             onChange={handleUpdate}
           >
             <option>Class</option>
@@ -181,7 +182,7 @@ const Students = () => {
           <select
             id="division"
             name="division"
-            value={newData.division}
+            value={oneData.division}
             onChange={handleUpdate}
           >
             <option>Division</option>
@@ -199,7 +200,7 @@ const Students = () => {
               id="active"
               name="status"
               value="Active"
-              checked={newData.status === 'Active'}
+              checked={oneData.status === 'Active'}
               onChange={handleUpdate}
             />
             <label htmlFor="active">Active</label>
@@ -209,7 +210,7 @@ const Students = () => {
               id="invoice"
               name="status"
               value="Invoice"
-              checked={newData.status === 'Invoice'}
+              checked={oneData.status === 'Invoice'}
               onChange={handleUpdate}
             />
             <label htmlFor="invoice">Invoice</label>

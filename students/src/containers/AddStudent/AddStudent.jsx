@@ -9,15 +9,9 @@ const AddStudent = () => {
   const [user, setUser] = useState({
      fullName: "", dob: "", school: "", classname: "", division: "", status: ""
   });
- 
-
-  let name, value;
 
   const handleInputs = (event) => {
-
-    name = event.target.name;
-    value = event.target.value;
-
+    const {name, value} = event.target;
     setUser({...user, [name]:value})
 
     console.log(user);
