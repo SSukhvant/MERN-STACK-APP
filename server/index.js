@@ -15,13 +15,21 @@ mongoose.connect('mongodb+srv://student:Sukh11707506@cluster0.xswcf.mongodb.net/
 
 app.post('/insert', async (req, res) => {
     const { fullName, dob, school, classname, division, status } = req.body;
-    console.log(fullName, dob, school, classname, division, status)
-
+    console.log(fullName, dob, school, classname, division, status);
     if (!fullName || !dob || !school || !classname || !division || !status ) {
         return res.status(422).json({status: "Please fill all the fields"});
     }
+
+    let today = new Date();
+    let birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+    {
+        age--;
+    }
     
-    const student =  new StudentModel({ fullName: fullName, age: dob, school: school, classname: classname, division: division, status: status });
+    const student =  new StudentModel({ fullName: fullName, age: age, school: school, classname: classname, division: division, status: status });
 
     try {
      await student.save();
@@ -55,11 +63,10 @@ app.get('/read/:id', async (req, res) => {
 });
 
 app.put('/update/:id', async (req, res) => {
-    console.log(req.params.id);
     StudentModel.findOneAndUpdate({_id:req.params.id}, {
     $set: {
         fullName: req.body.fullName, 
-        age: req.body.dob, 
+        age: req.body.age, 
         school: req.body.school, 
         classname: req.body.classname, 
         division: req.body.division, 
@@ -67,8 +74,55 @@ app.put('/update/:id', async (req, res) => {
     }
 })
     .then(result=> {
+        console.log(result);
         res.status(200).json({
-            updated_product:result
+            updated_data:result
+        })
+    })
+    .catch(err=>{
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
+    })
+});
+
+app.delete('/delete/:id', async (req, res) => {
+    StudentModel.findOneAndDelete({_id:req.params.id})
+    .then(result=> {
+        console.log(result);
+        res.status(200).json({
+            deleted_data:result
+        })
+    })
+    .catch(err=>{
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
+    })
+});
+
+app.get('/search/:key', async (req, res) => {
+    // const { fullName, age, school, classname, division } = req.body;
+    // console.log(fullName, age, school, classname, division);
+    // if (!fullName || !age || !school || !classname || !division) {
+    //     return res.status(422).json({status: "Invalid Search"});
+    // }
+
+    // const regex =  new StudentModel({ fullName: fullName, age: age, school: school, classname: classname, division: division});
+    // console.log(regex)
+    let data = await StudentModel.find(
+        {
+            "$or": [
+                {"fullName":{$regex: req.params.key}}
+            ]
+        }
+    )
+    .then(result=> {
+        console.log(result);
+        res.status(200).json({
+            searched_data:result
         })
     })
     .catch(err=>{
